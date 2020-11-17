@@ -13,9 +13,42 @@ const mask = require('./lib/mask');
 
 const mkdirp = pify(mkdir);
 
+
+let androidIconsList = androidIcons();
+
+const androidExtendIcons = [
+	{
+		"file": "drawable-hdpi/splash.png",
+		"density": "hdpi",
+		"dimension": 450
+	},
+	{
+		"file": "drawable-mdp/splash.png",
+		"density": "mdp",
+		"dimension": 300
+	},
+	{
+		"file": "drawable-xhdpi/splash.png",
+		"density": "xxxhdpi",
+		"dimension": 600
+	},
+	{
+		"file": "drawable-xxhdpi/splash.png",
+		"density": "xxhdpi",
+		"dimension": 900
+	},
+	{
+		"file": "drawable-xxxhdpi/splash.png",
+		"density": "xxxhdpi",
+		"dimension": 1200
+	}
+]
+
+androidIconsList = androidIconsList.concat(androidExtendIcons);
+
 const platformIcons = {
 	pwa: pwaIcons(),
-	android: androidIcons(),
+	android: androidIconsList,
 	ios: iosIcons(),
 	blackberry10: bb10Icons()
 };
@@ -44,7 +77,7 @@ const calculateDimension = (imgSize, iconSize, opts, resizeFn) => {
 		height = 72 * height / imgSize.height;
 	}
 
-	return {width, height};
+	return { width, height };
 };
 
 module.exports = (file, opts) => {
@@ -76,7 +109,7 @@ module.exports = (file, opts) => {
 
 	return pify(img.identify.bind(img))()
 		.then(identity => {
-			const {size} = identity;
+			const { size } = identity;
 
 			return Promise.all(icons.map(icon => {
 				const dest = path.join(opts.dest, icon.file);
